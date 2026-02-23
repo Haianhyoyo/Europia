@@ -24,20 +24,24 @@ export async function readDB() {
                 supabase.from('consultations').select('*').order('created_at', { ascending: false })
             ]);
 
-            return {
-                services: services || [],
-                news: news || [],
-                websiteSettings: websiteSettings || {
-                    address: "Đang cập nhật...",
-                    hotline: "Đang cập nhật...",
-                    email: "contact@europiaclinic.com",
-                    working_hours: "Thứ 2 - Chủ Nhật",
-                    logo: "/logo-europia.png"
-                },
-                faqs: faqs || [],
-                testimonials: testimonials || [],
-                consultations: consultations || []
-            };
+            if (websiteSettings || (services && services.length > 0)) {
+                return {
+                    services: services || [],
+                    news: news || [],
+                    websiteSettings: websiteSettings || {
+                        address: "Đang cập nhật...",
+                        hotline: "Đang cập nhật...",
+                        email: "contact@europiaclinic.com",
+                        working_hours: "Thứ 2 - Chủ Nhật",
+                        logo: "/logo-europia.png"
+                    },
+                    faqs: faqs || [],
+                    testimonials: testimonials || [],
+                    consultations: consultations || []
+                };
+            }
+            // If Supabase return nothing (empty project), fall through to local JSON
+            console.log('Supabase is empty, using local JSON data');
         } catch (error) {
             console.error('Supabase fetch failed, falling back to local JSON:', error);
         }
